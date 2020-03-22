@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TheIndianSuperMarket.Models;
@@ -22,7 +25,8 @@ namespace TheIndianSuperMarket.Controllers
         {
             Debug.Print("CustomerId : " + Cust_ID.ToString());
             var CustomerContext = _context.Customers.Where(p => p.CustomerId == Convert.ToInt32(Cust_ID)).FirstOrDefault();
-        ViewData["CustomerEmail"] = CustomerContext.CustomerEmail;
+            HttpContext.Session.SetString("CustomerEmail", CustomerContext.CustomerEmail);
+            ViewData["CustomerEmail"] = CustomerContext.CustomerEmail;
             return View();
         }
         public IActionResult Index()
@@ -54,6 +58,50 @@ namespace TheIndianSuperMarket.Controllers
         }
         public IActionResult Contact()
         {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Contact(IFormCollection form)
+        {
+            string name = form["name"].ToString();
+            string email = form["mail"].ToString();
+            string subject = form["subject"].ToString();
+            string message = form["message"].ToString();
+
+            MailMessage mail = new MailMessage();
+            mail.To.Add("dharanarola2012@gmail.com");
+            mail.From = new MailAddress(email);
+            mail.Subject = subject;
+            string Body = "You Got Message From: "+name+ "This is the Message:" + message;
+            mail.Body = Body;
+
+            using (var smtp = new SmtpClient())
+            {
+                var credential = new NetworkCredential
+                {
+                    UserName = "dharanarola2012@gmail.com",  // replace with valid value
+                    Password = "K@09neeSUR"  // replace with valid value
+                };
+                smtp.Credentials = credential;
+                smtp.Host = "smtp.gmail.com";
+                smtp.Port = 587;
+                smtp.EnableSsl = true;
+                smtp.Send(mail);
+                return RedirectToAction("Index");
+            }
+
+            Debug.Print(name);
+            Debug.Print(email);
+            Debug.Print(subject);
+            Debug.Print(message);
+
+            if(name != "")
+            {
+                RedirectToAction(nameof(Index));
+
+            }
+
             return View();
         }
         public IActionResult About()

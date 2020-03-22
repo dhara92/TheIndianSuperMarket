@@ -1,10 +1,12 @@
-﻿@model IEnumerable<TheIndianSuperMarket.Models.Products>
-
+﻿
+@model IList<TheIndianSuperMarket.Models.Products>
+@using Microsoft.AspNetCore.Http;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,7 +51,9 @@
                         </div>
                         <div class="col-md pr-4 d-flex topper align-items-center">
                             <div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
-                            <span class="text">youremail@email.com</span>
+                            <span class="text">
+                                @HttpContextAccessor.HttpContext.Session.GetString("CustomerEmail")
+                            </span>
                         </div>
                         <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
                             <span class="text">1-2 Business days delivery</span>
@@ -106,62 +110,51 @@
                     </ul>
                 </div>
             </div>
-            
-            <table>
-                <tr>
-
-
-                    @foreach (var item in Model)
-                    {
-                  
 
 
 
-                        <div class="row">
-                            <div class="col-md-6 col-lg-3 ftco-animate">
-                                <div class="product">
-                                    <a href="#" class="img-prod">
-                                        <img class="img-fluid" src="@Url.Content("~/images/" + item.ProductName+".jpg")" alt="Colorlib Template">
-                                        <span class="status">30%</span>
-                                        <div class="overlay"></div>
-                                    </a>
-                                    <div class="text py-3 pb-4 px-3 text-center">
-                                        <h3><a href="#">  @Html.DisplayFor(modelItem => item.ProductName)</a></h3>
-                                        <div class="d-flex">
-                                            <div class="pricing">
-                                                <p class="price"><span class="mr-2 price-dc"> @Html.DisplayFor(modelItem => item.PricePerCostUnit)</span><span class="price-sale">$4.20</span></p>
-                                            </div>
-                                        </div>
-                                        <div class="bottom-area d-flex px-3">
-                                            <div class="m-auto d-flex">
-                                                <a href="#" class="add-to-cart d-flex justify-content-center align-items-center text-center">
-                                                    <span><i class="ion-ios-menu"></i></span>
-                                                </a>
-                                                <a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
-                                                    <span><i class="ion-ios-cart"></i></span>
-                                                </a>
-                                                <a href="#" class="heart d-flex justify-content-center align-items-center ">
-                                                    <span><i class="ion-ios-heart"></i></span>
-                                                </a>
-                                            </div>
-                                        </div>
+
+            <div class="row">
+                @for (var i = 0; i < Model.Count(); i++)
+                {
+                    <div class="col-md-6 col-lg-3 ftco-animate">
+                        <div class="product">
+                            <a href="#" class="img-prod">
+                                <img class="img-fluid" src="@Url.Content("~/images/" + Model[i].ProductName+".jpg")" alt="Colorlib Template">
+                                <span class="status">30%</span>
+                                <div class="overlay"></div>
+                            </a>
+                            <div class="text py-3 pb-4 px-3 text-center">
+                                <h3><a href="#">  @Html.DisplayFor(modelItem => Model[i].ProductName)</a></h3>
+                                <div class="d-flex">
+                                    <div class="pricing">
+                                        <p class="price"><span class="mr-2 price-dc"> </span><span class="price-sale">$@Html.DisplayFor(modelItem => Model[i].PricePerCostUnit)</span></p>
+                                    </div>
+                                </div>
+                                <div class="bottom-area d-flex px-3">
+                                    <div class="m-auto d-flex">
+                                        <a href="#" class="add-to-cart d-flex justify-content-center align-items-center text-center">
+                                            <span><i class="ion-ios-menu"></i></span>
+                                        </a>
+                                        <a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
+                                            <span><i class="ion-ios-cart"></i></span>
+                                        </a>
+                                        <a href="#" class="heart d-flex justify-content-center align-items-center ">
+                                            <span><i class="ion-ios-heart"></i></span>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                  
 
+                    </div>
+
+                    if (i % 3 == 2)
+                    {
+                        <br />
                     }
-
-                </tr>
-            </table>
-
-           
-                
-              
-               
-
-
+                }
+            </div>
 
             <section class="ftco-section ftco-no-pt ftco-no-pb py-5 bg-light">
                 <div class="container py-4">
@@ -279,53 +272,5 @@
             <script src="~/js/main.js"></script>
 
 
-            <p>
-                <a asp-action="Create">Create New</a>
-            </p>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ProductName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.PricePerCostUnit)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.CostUnit)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.QuantityInStock)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Brand)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.ProductionDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.BestBeforeDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Plu)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Upc)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Organic)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Cut)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Animal)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.DepartmentNameNavigation)
-                        </th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                  </body></html>
+</body>
+</html>
