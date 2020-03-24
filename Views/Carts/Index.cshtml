@@ -1,9 +1,13 @@
-﻿@model TheIndianSuperMarket.Models.Products
+﻿@model IEnumerable<TheIndianSuperMarket.Models.Cart>
+
+
 @using Microsoft.AspNetCore.Http;
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Cart";
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,11 +18,11 @@
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" type="image/png" href="images/favicon.png">
+    <link rel="shortcut icon" type="image/png" href="images/favicon.png">
 
     <link rel="stylesheet" href="~/css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="~/css/animate.css">
-    <link rel="apple-touch-icon" type="image/png" href="images/favicon.png">
-    <link rel="shortcut icon" type="image/png" href="images/favicon.png">
 
     <link rel="stylesheet" href="~/css/owl.carousel.min.css">
     <link rel="stylesheet" href="~/css/owl.theme.default.min.css">
@@ -81,9 +85,7 @@
                     <li class="nav-item"><a asp-action="About" class="nav-link">About</a></li>
                     <li class="nav-item"><a asp-action="Contact" class="nav-link">Contact</a></li>
                     <li class="nav-item cta cta-colored">
-                        <a asp-action="Cart" class="nav-link">
-                            <span class="icon-shopping_cart"></span>[2]
-                        </a>
+                        <a asp-action="Cart" class="nav-link"><span class="icon-shopping_cart"></span>[2]</a>
                     </li>
 
                 </ul>
@@ -92,172 +94,108 @@
     </nav>
     <!-- END nav -->
 
-
-    <section class="ftco-section">
+    <section class="ftco-section ftco-cart">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6 mb-5 ftco-animate">
-                    <a href="images/product-1.jpg" class="image-popup"><img src="@Url.Content("~/images/" + Model.ProductName+".jpg")" class="img-fluid" alt="Colorlib Template"></a>
-                </div>
-                <div class="col-lg-6 product-details pl-md-5 ftco-animate">
-                    <h3> @Html.DisplayFor(model => model.ProductName)</h3>
-                    <div class="rating d-flex">
-                        <p class="text-left mr-4">
-                            <a href="#" class="mr-2">5.0</a>
-                            <a href="#"><span class="ion-ios-star-outline"></span></a>
-                            <a href="#"><span class="ion-ios-star-outline"></span></a>
-                            <a href="#"><span class="ion-ios-star-outline"></span></a>
-                            <a href="#"><span class="ion-ios-star-outline"></span></a>
-                            <a href="#"><span class="ion-ios-star-outline"></span></a>
-                        </p>
-                        <p class="text-left mr-4">
-                            <a href="#" class="mr-2" style="color: #000;">100 <span style="color: #bbb;">Rating</span></a>
-                        </p>
-                        <p class="text-left">
-                            <a href="#" class="mr-2" style="color: #000;">500 <span style="color: #bbb;">Sold</span></a>
-                        </p>
-                    </div>
-                    <p class="price"><span>@Html.DisplayFor(model => model.PricePerCostUnit)</span></p>
-                    <p>
-                        @Html.DisplayFor(model => model.Description)
-                    </p>
-                    <div class="row mt-4">
-                        <div class="col-md-6">
-                            <div class="form-group d-flex">
-                                <div class="select-wrap">
-                                    <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                                    <select name="" id="" class="form-control">
-                                        <option value="">Small</option>
-                                        <option value="">Medium</option>
-                                        <option value="">Large</option>
-                                        <option value="">Extra Large</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="w-100"></div>
-                        <div class="input-group col-md-6 d-flex mb-3">
-                            <span class="input-group-btn mr-2">
-                                <button type="button" class="quantity-left-minus btn" data-type="minus" data-field="">
-                                    <i class="ion-ios-remove"></i>
-                                </button>
-                            </span>
-                            <input type="text" id="quantity" name="quantity" class="form-control input-number" value="1" min="1" max="100">
-                            <span class="input-group-btn ml-2">
-                                <button type="button" class="quantity-right-plus btn" data-type="plus" data-field="">
-                                    <i class="ion-ios-add"></i>
-                                </button>
-                            </span>
-                        </div>
-                        <div class="w-100"></div>
-                        <div class="col-md-12">
-                            <p style="color: #000;">@Html.DisplayFor(model => model.QuantityInStock) quantity available</p>
-                        </div>
-                    </div>
-                    <p><a asp-action="index" asp-controller="Home" class="btn btn-black py-3 px-5">Add to Cart</a></p>
-                </div>
-            </div>
-        </div>
-    </section>
+                <div class="col-md-12 ftco-animate">
+                    <div class="cart-list">
+                        <table class="table">
+                            <thead class="thead-primary">
+                                <tr class="text-center">
+                                    <th>&nbsp;</th>
+                                    <th>&nbsp;</th>
+                                    <th>Product name</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center">
+                                    @for (var i = 0; i < Model.Count(); i++)
+                                    {
+                                        <td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
 
-    <section class="ftco-section">
-        <div class="container">
-            <div class="row justify-content-center mb-3 pb-3">
-                <div class="col-md-12 heading-section text-center ftco-animate">
-                    <span class="subheading">Products</span>
-                    <h2 class="mb-4">Related Products</h2>
+                                        <td class="image-prod"><div class="img" style="background-image:url(images/cart_1.jpg);"></div></td>
+
+                                        <td class="product-name">
+                                            <h3></h3>
+
+                                        </td>
+
+                                        <td class="price">$15.00</td>
+
+                                        <td class="quantity">
+                                            <div class="input-group mb-3">
+                                                <input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
+                                            </div>
+                                        </td>
+
+                                        <td class="total">$10.00</td>
+                                    }
+                                </tr><!-- END TR-->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 col-lg-3 ftco-animate">
-                    <div class="product">
-                        <a href="#" class="img-prod">
-                            <img class="img-fluid" src="images/rel_1.jpg" alt="Colorlib Template">
-                            <span class="status">30%</span>
-                            <div class="overlay"></div>
-                        </a>
-                        <div class="text py-3 pb-4 px-3 text-center">
-                            <h3><a href="#">Coriander Powder</a></h3>
-                            <div class="d-flex">
-                                <div class="pricing">
-                                    <p class="price"><span class="mr-2 price-dc">$6.00</span><span class="price-sale">$4.20</span></p>
-                                </div>
+            <div class="row justify-content-end">
+                <div class="col-lg-4 mt-5 cart-wrap ftco-animate">
+                    <div class="cart-total mb-3">
+                        <h3>Coupon Code</h3>
+                        <p>Enter your coupon code if you have one</p>
+                        <form action="#" class="info">
+                            <div class="form-group">
+                                <label for="">Coupon code</label>
+                                <input type="text" class="form-control text-left px-3" placeholder="">
                             </div>
-                            <div class="bottom-area d-flex px-3">
-                                <div class="m-auto d-flex">
-                                    <a href="#" class="add-to-cart d-flex justify-content-center align-items-center text-center">
-                                        <span><i class="ion-ios-menu"></i></span>
-                                    </a>
-                                    <a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
-                                        <span><i class="ion-ios-cart"></i></span>
-                                    </a>
-                                    <a href="#" class="heart d-flex justify-content-center align-items-center ">
-                                        <span><i class="ion-ios-heart"></i></span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                        </form>
                     </div>
+                    <p><a href="checkout.html" class="btn btn-primary py-3 px-4">Apply Coupon</a></p>
                 </div>
-                <div class="col-md-6 col-lg-3 ftco-animate">
-                    <div class="product">
-                        <a href="#" class="img-prod">
-                            <img class="img-fluid" src="images/rel_2.jpg" alt="Colorlib Template">
-                            <div class="overlay"></div>
-                        </a>
-                        <div class="text py-3 pb-4 px-3 text-center">
-                            <h3><a href="#">Turmeric Powder</a></h3>
-                            <div class="d-flex">
-                                <div class="pricing">
-                                    <p class="price"><span>$6.00</span></p>
-                                </div>
+                <div class="col-lg-4 mt-5 cart-wrap ftco-animate">
+                    <div class="cart-total mb-3">
+                        <h3>Estimate shipping and tax</h3>
+                        <p>Enter your destination to get a shipping estimate</p>
+                        <form action="#" class="info">
+                            <div class="form-group">
+                                <label for="">Country</label>
+                                <input type="text" class="form-control text-left px-3" placeholder="">
                             </div>
-                            <div class="bottom-area d-flex px-3">
-                                <div class="m-auto d-flex">
-                                    <a href="#" class="add-to-cart d-flex justify-content-center align-items-center text-center">
-                                        <span><i class="ion-ios-menu"></i></span>
-                                    </a>
-                                    <a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
-                                        <span><i class="ion-ios-cart"></i></span>
-                                    </a>
-                                    <a href="#" class="heart d-flex justify-content-center align-items-center ">
-                                        <span><i class="ion-ios-heart"></i></span>
-                                    </a>
-                                </div>
+                            <div class="form-group">
+                                <label for="country">State/Province</label>
+                                <input type="text" class="form-control text-left px-3" placeholder="">
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <label for="country">Zip/Postal Code</label>
+                                <input type="text" class="form-control text-left px-3" placeholder="">
+                            </div>
+                        </form>
                     </div>
+                    <p><a href="checkout.html" class="btn btn-primary py-3 px-4">Estimate</a></p>
                 </div>
-                <div class="col-md-6 col-lg-3 ftco-animate">
-                    <div class="product">
-                        <a href="#" class="img-prod">
-                            <img class="img-fluid" src="images/rel_3.jpg" alt="Colorlib Template">
-                            <div class="overlay"></div>
-                        </a>
-                        <div class="text py-3 pb-4 px-3 text-center">
-                            <h3><a href="#">Garam Masala</a></h3>
-                            <div class="d-flex">
-                                <div class="pricing">
-                                    <p class="price"><span>$5.00</span></p>
-                                </div>
-                            </div>
-                            <div class="bottom-area d-flex px-3">
-                                <div class="m-auto d-flex">
-                                    <a href="#" class="add-to-cart d-flex justify-content-center align-items-center text-center">
-                                        <span><i class="ion-ios-menu"></i></span>
-                                    </a>
-                                    <a href="#" class="buy-now d-flex justify-content-center align-items-center mx-1">
-                                        <span><i class="ion-ios-cart"></i></span>
-                                    </a>
-                                    <a href="#" class="heart d-flex justify-content-center align-items-center ">
-                                        <span><i class="ion-ios-heart"></i></span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                <div class="col-lg-4 mt-5 cart-wrap ftco-animate">
+                    <div class="cart-total mb-3">
+                        <h3>Cart Totals</h3>
+                        <p class="d-flex">
+                            <span>Subtotal</span>
+                            <span>$19.79</span>
+                        </p>
+                        <p class="d-flex">
+                            <span>Delivery</span>
+                            <span>$0.00</span>
+                        </p>
+                        <p class="d-flex">
+                            <span>Discount</span>
+                            <span>$5.00</span>
+                        </p>
+                        <hr>
+                        <p class="d-flex total-price">
+                            <span>Total</span>
+                            <span>$14.79</span>
+                        </p>
                     </div>
+                    <p><a href="checkout.html" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
                 </div>
             </div>
         </div>
@@ -416,3 +354,57 @@
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Customer.Password)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.CostUnit)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

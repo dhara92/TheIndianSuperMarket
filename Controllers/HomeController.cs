@@ -23,15 +23,39 @@ namespace TheIndianSuperMarket.Controllers
         }
         public IActionResult HomePage(String Cust_ID)
         {
-            Debug.Print("CustomerId : " + Cust_ID.ToString());
-            var CustomerContext = _context.Customers.Where(p => p.CustomerId == Convert.ToInt32(Cust_ID)).FirstOrDefault();
+            if (Cust_ID != null)
+            {
+                HttpContext.Session.SetString("CustomerID", Cust_ID);
+                
+            }
+            else if (Request.Query["Cust_ID"].Any())
+            {
+                HttpContext.Session.SetString("CustomerID", Request.Query["Cust_ID"]);
+           
+            }
+            else if (HttpContext.Session.GetString("CustomerID") != null)
+            {
+                Cust_ID = HttpContext.Session.GetString("Cust_ID");
+              
+            }
+            else
+            {
+           
+                return RedirectToAction("Index");
+            }
+            var CustomerContext = _context.Customers.Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID"))).FirstOrDefault();
             HttpContext.Session.SetString("CustomerEmail", CustomerContext.CustomerEmail);
             ViewData["CustomerEmail"] = CustomerContext.CustomerEmail;
             return View();
         }
         public IActionResult Index()
         {
-            return View();
+            if(HttpContext.Session.GetString("CustomerID") != null)
+            {
+                RedirectToAction(nameof(HomePage));
+            }
+                    return View();
+            
         }
 
         [HttpPost]
@@ -62,7 +86,7 @@ namespace TheIndianSuperMarket.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Contact(IFormCollection form)
+        public IActionResult Contact(IFormCollection form)
         {
             string name = form["name"].ToString();
             string email = form["mail"].ToString();
@@ -73,7 +97,7 @@ namespace TheIndianSuperMarket.Controllers
             mail.To.Add("dharanarola2012@gmail.com");
             mail.From = new MailAddress(email);
             mail.Subject = subject;
-            string Body = "You Got Message From: "+name+ "This is the Message:" + message;
+            string Body = "You Got Message From: " + name + "This is the Message:" + message;
             mail.Body = Body;
 
             using (var smtp = new SmtpClient())
@@ -91,18 +115,7 @@ namespace TheIndianSuperMarket.Controllers
                 return RedirectToAction("Index");
             }
 
-            Debug.Print(name);
-            Debug.Print(email);
-            Debug.Print(subject);
-            Debug.Print(message);
 
-            if(name != "")
-            {
-                RedirectToAction(nameof(Index));
-
-            }
-
-            return View();
         }
         public IActionResult About()
         {

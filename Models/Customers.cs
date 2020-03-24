@@ -7,6 +7,7 @@ namespace TheIndianSuperMarket.Models
     {
         public Customers()
         {
+            Cart = new HashSet<Cart>();
             Purchases = new HashSet<Purchases>();
         }
 
@@ -16,6 +17,7 @@ namespace TheIndianSuperMarket.Models
         public string CustomerEmail { get; set; }
         public string Password { get; set; }
 
+        public virtual ICollection<Cart> Cart { get; set; }
         public virtual ICollection<Purchases> Purchases { get; set; }
     }
 }

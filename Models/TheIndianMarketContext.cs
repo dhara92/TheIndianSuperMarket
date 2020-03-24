@@ -18,6 +18,7 @@ namespace TheIndianSuperMarket.Models
         public virtual DbSet<Admin> Admin { get; set; }
         public virtual DbSet<AisleContains> AisleContains { get; set; }
         public virtual DbSet<Aisles> Aisles { get; set; }
+        public virtual DbSet<Cart> Cart { get; set; }
         public virtual DbSet<Customers> Customers { get; set; }
         public virtual DbSet<Departments> Departments { get; set; }
         public virtual DbSet<Employees> Employees { get; set; }
@@ -33,7 +34,7 @@ namespace TheIndianSuperMarket.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=DESKTOP-D92K87\\SQLEXPRESS;Database=TheIndianMarket; Trusted_Connection=True");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-D92K87\\SQLEXPRESS;Database=TheIndianMarket;Trusted_Connection=True");
             }
         }
 
@@ -89,6 +90,27 @@ namespace TheIndianSuperMarket.Models
                     .IsRequired()
                     .HasMaxLength(255)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Cart>(entity =>
+            {
+                entity.ToTable("cart");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
+
+                entity.Property(e => e.ProductId).HasColumnName("productId");
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.Cart)
+                    .HasForeignKey(d => d.CustomerId)
+                    .HasConstraintName("FK_cart_userRegistration");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.Cart)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("FK_cart_product");
             });
 
             modelBuilder.Entity<Customers>(entity =>
@@ -200,6 +222,10 @@ namespace TheIndianSuperMarket.Models
                 entity.Property(e => e.DepartmentName)
                     .IsRequired()
                     .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Description)
+                    .HasMaxLength(1000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Plu).HasColumnName("PLU");

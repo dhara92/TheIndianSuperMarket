@@ -8,6 +8,7 @@ namespace TheIndianSuperMarket.Models
         public Products()
         {
             AisleContains = new HashSet<AisleContains>();
+            Cart = new HashSet<Cart>();
             ProvidedBy = new HashSet<ProvidedBy>();
             Purchases = new HashSet<Purchases>();
             ReceivedFrom = new HashSet<ReceivedFrom>();
@@ -27,9 +28,11 @@ namespace TheIndianSuperMarket.Models
         public int? Organic { get; set; }
         public string Cut { get; set; }
         public string Animal { get; set; }
+        public string Description { get; set; }
 
         public virtual Departments DepartmentNameNavigation { get; set; }
         public virtual ICollection<AisleContains> AisleContains { get; set; }
+        public virtual ICollection<Cart> Cart { get; set; }
         public virtual ICollection<ProvidedBy> ProvidedBy { get; set; }
         public virtual ICollection<Purchases> Purchases { get; set; }
         public virtual ICollection<ReceivedFrom> ReceivedFrom { get; set; }
