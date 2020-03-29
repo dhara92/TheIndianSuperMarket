@@ -43,6 +43,8 @@ namespace TheIndianSuperMarket.Controllers
            
                 return RedirectToAction("Index");
             }
+            var cartContext = _context.Cart.Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID")));
+            HttpContext.Session.SetString("TotalItem", cartContext.Count().ToString());
             var CustomerContext = _context.Customers.Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID"))).FirstOrDefault();
             HttpContext.Session.SetString("CustomerEmail", CustomerContext.CustomerEmail);
             ViewData["CustomerEmail"] = CustomerContext.CustomerEmail;
@@ -112,7 +114,7 @@ namespace TheIndianSuperMarket.Controllers
                 smtp.Port = 587;
                 smtp.EnableSsl = true;
                 smtp.Send(mail);
-                return RedirectToAction("Index");
+                return RedirectToAction("HomePage");
             }
 
 

@@ -81,7 +81,7 @@
                         <li class="nav-item"><a asp-action="About" class="nav-link">About</a></li>
                         <li class="nav-item"><a asp-action="Contact" class="nav-link">Contact</a></li>
                         <li class="nav-item cta cta-colored">
-                            <a asp-action="Cart" class="nav-link"><span class="icon-shopping_cart"></span>[2]</a>
+                            <a asp-action="Cart" class="nav-link"><span class="icon-shopping_cart"></span>[@HttpContextAccessor.HttpContext.Session.GetString("TotalItem")]</a>
                         </li>
 
                     </ul>

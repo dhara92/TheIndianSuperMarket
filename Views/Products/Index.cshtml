@@ -75,7 +75,7 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown04">
-                            <a class="dropdown-item" asp-controller="Home" asp-action="Shop">Shop</a>
+                            <a class="dropdown-item" asp-controller="Products" asp-action="Index">Shop</a>
                             <a class="dropdown-item" asp-controller="Home" asp-action="Wishlist">Wishlist</a>
                             <a class="dropdown-item" href="product-single.html">Single Product</a>
                             <a class="dropdown-item" asp-controller="Home" asp-action="Cart">Cart</a>
@@ -85,7 +85,7 @@
                     <li class="nav-item"><a asp-controller="Home" asp-action="About" class="nav-link">About</a></li>
                     <li class="nav-item"><a asp-controller="Home" asp-action="Contact" class="nav-link">Contact</a></li>
                     <li class="nav-item cta cta-colored">
-                        <a asp-action="Cart" asp-controller="Home" class="nav-link"><span class="icon-shopping_cart"></span>[2]</a>
+                        <a asp-action="Cart" asp-controller="Home" class="nav-link"><span class="icon-shopping_cart"></span>[@HttpContextAccessor.HttpContext.Session.GetString("TotalItem")]</a>
                     </li>
 
                 </ul>
@@ -119,7 +119,7 @@
                     <div class="col-md-6 col-lg-3 ftco-animate">
                         <div class="product">
                             <a asp-action="Details" asp-route-id="@Model[i].ProductId" class="img-prod">
-                                <img class="img-fluid" src="@Url.Content("~/images/" + Model[i].ProductName+".jpg")" alt="Colorlib Template">
+                                <img class="img-fluid" src="@Url.Content("/images/" + Model[i].ProductName+".jpg")" alt="Colorlib Template">
                                 <span class="status">30%</span>
                                 <div class="overlay"></div>
                             </a>

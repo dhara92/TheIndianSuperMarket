@@ -47,30 +47,39 @@ namespace TheIndianSuperMarket.Controllers
             return View(cart);
         }
 
-        // GET: Carts/Create
-        public IActionResult Create()
-        {
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "Password");
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "CostUnit");
-            return View();
-        }
+        /* // GET: Carts/Create
+         public IActionResult Create()
+         {
+             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "CustomerId");
+             ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "PriceCostperUnit");
+             return View();
+         }
 
-        // POST: Carts/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CustomerId,ProductId")] Cart cart)
+         // POST: Carts/Create
+         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+ [HttpPost]
+ [ValidateAntiForgeryToken]*/
+        public async Task<IActionResult> Create([Bind ("productId, CustomerID")] Cart _cart)
         {
+            if (Request.Query["PID"].Any() && Request.Query["CustID"].Any())
+            {
+                _cart.ProductId = Convert.ToInt32(Request.Query["PID"]);
+                _cart.CustomerId = Convert.ToInt32(Request.Query["CustID"]);
+            }
+            
+           
             if (ModelState.IsValid)
             {
-                _context.Add(cart);
+               
+
+                _context.Add(_cart);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "Password", cart.CustomerId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "CostUnit", cart.ProductId);
-            return View(cart);
+           /*ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "Password", cart.CustomerId);
+            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "CostUnit", cart.ProductId);*/
+            return View(_cart);
         }
 
         // GET: Carts/Edit/5
@@ -98,6 +107,7 @@ namespace TheIndianSuperMarket.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,CustomerId,ProductId")] Cart cart)
         {
+            
             if (id != cart.Id)
             {
                 return NotFound();
