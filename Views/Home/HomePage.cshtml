@@ -16,8 +16,8 @@
         <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap" rel="stylesheet">
-        <link rel="apple-touch-icon" type="image/png" href="/images/favicon.png">
-        <link rel="shortcut icon" type="image/png" href="/images/favicon.png">
+        <link rel="apple-touch-icon" type="image/png" href="~/images/favicon.png">
+        <link rel="shortcut icon" type="image/png" href="~/images/favicon.png">
 
         <link rel="stylesheet" href="~/css/open-iconic-bootstrap.min.css">
         <link rel="stylesheet" href="~/css/animate.css">
@@ -49,12 +49,11 @@
                                 <span class="text">+ 1235 2355 98</span>
                             </div>
                             <div class="col-md pr-4 d-flex topper align-items-center">
-                                <div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
-
-                                <span class="text"> @HttpContextAccessor.HttpContext.Session.GetString("CustomerEmail")</span>
+                                <div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-account_box"></span></div>
+                                <span class="text">@HttpContextAccessor.HttpContext.Session.GetString("CustomerName")</span>
                             </div>
                             <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
-                                <span class="text">1-2 Business days delivery &amp; Same Day Pick-up</span>
+                                <span class="text">1-2 Business days delivery</span>
                             </div>
                         </div>
                     </div>
@@ -62,31 +61,26 @@
             </div>
         </div>
         <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-
-
             <div class="container">
-                <a class="navbar-brand" asp-action="HomePage" asp-route-Cust_ID="@HttpContextAccessor.HttpContext.Session.GetString("CustomerID")">The Indian SuperMarket</a>
+                <a class="navbar-brand" asp-action="HomePage" asp-controller="Home" asp-route-Cust_ID="@HttpContextAccessor.HttpContext.Session.GetString("CustomerID")">The Indian SuperMarket</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="oi oi-menu"></span> Menu
                 </button>
 
                 <div class="collapse navbar-collapse" id="ftco-nav">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item"><a asp-action="HomePage" class="nav-link" asp-route-Cust_ID="@HttpContextAccessor.HttpContext.Session.GetString("CustomerID")">Home</a></li>
+                        <li class="nav-item"><a asp-action="HomePage" asp-controller="Home" class="nav-link" asp-route-Cust_ID="@HttpContextAccessor.HttpContext.Session.GetString("CustomerID")">Home</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown04">
                                 <a class="dropdown-item" asp-controller="Products" asp-action="Index">Shop</a>
-                                <a class="dropdown-item" asp-action="Wishlist">Wishlist</a>
-                                <a class="dropdown-item" href="product-single.html">Single Product</a>
-                                <a class="dropdown-item" asp-action="Cart">Cart</a>
-                                <a class="dropdown-item" asp-action="Checkout">Checkout</a>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Carts">Cart</a>
+                                <a class="dropdown-item" asp-action="Checkout" asp-controller="Home">Checkout</a>
                             </div>
                         </li>
-                        <li class="nav-item"><a asp-action="About" class="nav-link">About</a></li>
-                        <li class="nav-item"><a asp-action="Contact" class="nav-link">Contact</a></li>
-                        <li class="nav-item cta cta-colored"><a asp-action="Cart" class="nav-link"><span class="icon-shopping_cart"></span>[@HttpContextAccessor.HttpContext.Session.GetString("TotalItem")]</a></li>
-
+                        <li class="nav-item"><a asp-action="About" asp-controller="Home" class="nav-link">About</a></li>
+                        <li class="nav-item"><a asp-action="Contact" asp-controller="Home" class="nav-link">Contact</a></li>
+                        <li class="nav-item cta cta-colored"><a asp-action="Index" asp-controller="Carts" class="nav-link"><span class="icon-shopping_cart"></span>[@HttpContextAccessor.HttpContext.Session.GetString("TotalItem")]</a></li>
                     </ul>
                 </div>
             </div>
@@ -101,7 +95,7 @@
                         <div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
                             <div class="col-md-12 ftco-animate text-center">
                                 <h1 class="mb-2">We serve Truly Indian Groceries</h1>
-                                <p><a href="#" class="btn btn-primary">View Details</a></p>
+                                <p><a asp-action="Index" asp-controller="Products" asp-route-DepartmentName="Snacks" class="btn btn-primary">View Details</a></p>
                             </div>
                         </div>
                     </div>
@@ -113,31 +107,20 @@
                         <div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
                             <div class="col-sm-12 ftco-animate text-center">
                                 <h1 class="mb-2">Fresh Vegetables</h1>
-                                <p><a href="#" class="btn btn-primary">View Details</a></p>
+                                <p><a asp-action="Index" asp-controller="Products" asp-route-DepartmentName="Produce" class="btn btn-primary">View Details</a></p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="slider-item" style="background-image: url(/images/bg_3.jpg);">
-                    <div class="overlay"></div>
-                    <div class="container">
-                        <div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
-                            <div class="col-md-12 ftco-animate text-center">
-                                <h1 class="mb-2">Dairy Products</h1>
-                                <p><a href="#" class="btn btn-primary">View Details</a></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+              
                 <div class="slider-item" style="background-image: url(/images/bg_4.jpg);">
                     <div class="overlay"></div>
                     <div class="container">
                         <div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
                             <div class="col-md-12 ftco-animate text-center">
                                 <h1 class="mb-2">Frozen Foods</h1>
-                                <p><a href="#" class="btn btn-primary">View Details</a></p>
+                                <p><a asp-action="Index" asp-controller="Products" asp-route-DepartmentName="Frozen" class="btn btn-primary">View Details</a></p>
                             </div>
                         </div>
                     </div>
@@ -149,7 +132,7 @@
                         <div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
                             <div class="col-md-12 ftco-animate text-center">
                                 <h1 class="mb-2">Indian Snacks</h1>
-                                <p><a href="#" class="btn btn-primary">View Details</a></p>
+                                <p><a asp-action="Index" asp-controller="Products" asp-route-DepartmentName="Snacks" class="btn btn-primary">View Details</a></p>
                             </div>
                         </div>
                     </div>
@@ -161,7 +144,7 @@
                         <div class="row slider-text justify-content-center align-items-center" data-scrollax-parent="true">
                             <div class="col-md-12 ftco-animate text-center">
                                 <h1 class="mb-2">Indian Sweets</h1>
-                                <p><a href="#" class="btn btn-primary">View Details</a></p>
+                                <p><a asp-action="Index" asp-controller="Products" asp-route-DepartmentName="Sweet" class="btn btn-primary">View Details</a></p>
                             </div>
                         </div>
                     </div>
@@ -238,17 +221,17 @@
                             <div class="col-md-6">
                                 <div class="category-wrap ftco-animate img mb-4 d-flex align-items-end" style="background-image: url(/images/category-1.jpg);">
                                     <div class="text px-3 py-1">
-                                        <h2 class="mb-0"><a href="#">Spices</a></h2>
+                                        <h2 class="mb-0"><a asp-action="Index" asp-controller="Products" asp-route-DepartmentName="Spices">Spices</a></h2>
                                     </div>
                                 </div>
                                 <div class="category-wrap ftco-animate mb-4 img d-flex align-items-end" style="background-image: url(/images/category-2.jpg);">
                                     <div class="text px-3 py-1">
-                                        <h2 class="mb-0"><a href="#">Pulses</a></h2>
+                                        <h2 class="mb-0"><a asp-action="Index" asp-controller="Products" asp-route-DepartmentName="Pulses">Pulses</a></h2>
                                     </div>
                                 </div>
                                 <div class="category-wrap ftco-animate img d-flex align-items-end" style="background-image: url(/images/bg_4.jpg);">
                                     <div class="text px-3 py-1">
-                                        <h2 class="mb-0"><a href="#">Frozen Foods</a></h2>
+                                        <h2 class="mb-0"><a asp-action="Index" asp-controller="Products" asp-route-DepartmentName="Frozen">Frozen Foods</a></h2>
                                     </div>
                                 </div>
                             </div>
@@ -258,7 +241,7 @@
                     <div class="col-md-4">
                         <div class="category-wrap ftco-animate img mb-4 d-flex align-items-end" style="background-image: url(/images/category-3.jpg);">
                             <div class="text px-3 py-1">
-                                <h2 class="mb-0"><a href="#">Dairy Products &amp; Sweets</a></h2>
+                                <h2 class="mb-0"><a asp-action="Index" asp-controller="Products" asp-route-DepartmentName="Sweet">Sweets</a></h2>
                             </div>
                         </div>
                         <div class="category-wrap ftco-animate img mb-4 d-flex align-items-end" style="background-image: url(/images/category-4.jpg);">
@@ -268,7 +251,7 @@
                         </div>
                         <div class="category-wrap ftco-animate img d-flex align-items-end" style="background-image: url(/images/bg_5.jpg);">
                             <div class="text px-3 py-1">
-                                <h2 class="mb-0"><a href="#">Indian Snacks</a></h2>
+                                <h2 class="mb-0"><a asp-action="Index" asp-controller="Products" asp-route-DepartmentName="Snacks">Indian Snacks</a></h2>
                             </div>
                         </div>
 
@@ -341,10 +324,10 @@
                         <div class="ftco-footer-widget mb-4 ml-md-5">
                             <h2 class="ftco-heading-2">Menu</h2>
                             <ul class="list-unstyled">
-                                <li><a href="#" class="py-2 d-block">Shop</a></li>
-                                <li><a href="#" class="py-2 d-block">About</a></li>
+                                <li><a asp-action="Index" asp-controller="Products" asp-route-DepartmentName="Snacks" class="py-2 d-block">Shop</a></li>
+                                <li><a asp-action="About" asp-controller="Home"  class="py-2 d-block">About</a></li>
                                 <li><a href="#" class="py-2 d-block">Journal</a></li>
-                                <li><a href="#" class="py-2 d-block">Contact Us</a></li>
+                                <li><a asp-action="Contact" asp-controller="Home" class="py-2 d-block">Contact Us</a></li>
                             </ul>
                         </div>
                     </div>
@@ -372,7 +355,7 @@
                                 <ul>
                                     <li><span class="icon icon-map-marker"></span><span class="text">509 Wilson Ave #18, Kitchener, ON, CA. N2C 2M4</span></li>
                                     <li><a href="#"><span class="icon icon-phone"></span><span class="text">+1 123 456 7890</span></a></li>
-                                    <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+                                    <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@TheIndianSuperMarket.com</span></a></li>
                                 </ul>
                             </div>
                         </div>

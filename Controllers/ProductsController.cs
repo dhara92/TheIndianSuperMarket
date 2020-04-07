@@ -19,9 +19,18 @@ namespace TheIndianSuperMarket.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string depart_Name)
         {
-            var theIndianMarketContext = _context.Products.Include(p => p.DepartmentNameNavigation);
+            
+            if (Request.Query["DepartmentName"].Any())
+            {
+                depart_Name = Request.Query["DepartmentName"].ToString();
+            }
+            else
+            {
+                depart_Name = "Snacks";
+            }
+            var theIndianMarketContext = _context.Products.Include(p => p.DepartmentNameNavigation).Where(p => p.DepartmentName == depart_Name);
             return View(await theIndianMarketContext.ToListAsync());
         }
 

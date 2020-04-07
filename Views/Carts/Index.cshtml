@@ -62,30 +62,25 @@
     </div>
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
-            <a class="navbar-brand" asp-action="HomePage" asp-route-Cust_ID="@HttpContextAccessor.HttpContext.Session.GetString("CustomerID")">The Indian SuperMarket</a>
+            <a class="navbar-brand" asp-action="HomePage" asp-controller="Home" asp-route-Cust_ID="@HttpContextAccessor.HttpContext.Session.GetString("CustomerID")">The Indian SuperMarket</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="oi oi-menu"></span> Menu
             </button>
 
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a asp-action="HomePage" asp-route-Cust_ID="@HttpContextAccessor.HttpContext.Session.GetString("CustomerID")" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a asp-action="HomePage" asp-controller="Home" class="nav-link" asp-route-Cust_ID="@HttpContextAccessor.HttpContext.Session.GetString("CustomerID")">Home</a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown04">
                             <a class="dropdown-item" asp-controller="Products" asp-action="Index">Shop</a>
-                            <a class="dropdown-item" asp-action="Wishlist">Wishlist</a>
-                            <a class="dropdown-item" href="product-single.html">Single Product</a>
-                            <a class="dropdown-item" asp-action="Cart">Cart</a>
-                            <a class="dropdown-item" asp-action="Checkout">Checkout</a>
+                            <a class="dropdown-item" asp-action="Index" asp-controller="Carts">Cart</a>
+                            <a class="dropdown-item" asp-action="Checkout" asp-controller="Home">Checkout</a>
                         </div>
                     </li>
-                    <li class="nav-item"><a asp-action="About" class="nav-link">About</a></li>
-                    <li class="nav-item"><a asp-action="Contact" class="nav-link">Contact</a></li>
-                    <li class="nav-item cta cta-colored">
-                        <a asp-action="Cart" class="nav-link"><span class="icon-shopping_cart"></span>[@HttpContextAccessor.HttpContext.Session.GetString("TotalItem")]</a>
-                    </li>
-
+                    <li class="nav-item"><a asp-action="About" asp-controller="Home" class="nav-link">About</a></li>
+                    <li class="nav-item"><a asp-action="Contact" asp-controller="Home" class="nav-link">Contact</a></li>
+                    <li class="nav-item cta cta-colored"><a asp-action="Index" asp-controller="Carts" class="nav-link"><span class="icon-shopping_cart"></span>[@HttpContextAccessor.HttpContext.Session.GetString("TotalItem")]</a></li>
                 </ul>
             </div>
         </div>
@@ -126,7 +121,7 @@
 
                                         </td>
 
-                                        <td class="price">@Html.DisplayFor(modelItem => item.Product.PricePerCostUnit)</td>
+                                        <td class="price">$@Html.DisplayFor(modelItem => item.Product.PricePerCostUnit)</td>
 
                                         <td class="quantity">
                                             <div class="input-group mb-3">
@@ -134,7 +129,7 @@
                                             </div>
                                         </td>
 
-                                        <td class="total">$10.00</td>
+                                        <td class="total">$@Html.DisplayFor(modelItem => item.Product.PricePerCostUnit)</td>
 
                                     </tr><!-- END TR-->
                                 }
@@ -155,7 +150,7 @@
                             </div>
                         </form>
                     </div>
-                    <p><a href="checkout.html" class="btn btn-primary py-3 px-4">Apply Coupon</a></p>
+                    <p><a asp-action="Checkout" asp-controller="Home" class="btn btn-primary py-3 px-4">Apply Coupon</a></p>
                 </div>
                 <div class="col-lg-4 mt-5 cart-wrap ftco-animate">
                     <div class="cart-total mb-3">
@@ -183,7 +178,7 @@
                         <h3>Cart Totals</h3>
                         <p class="d-flex">
                             <span>Subtotal</span>
-                            <span>$19.79</span>
+                            <span>$@ViewData["Sum"]</span>
                         </p>
                         <p class="d-flex">
                             <span>Delivery</span>
@@ -191,15 +186,15 @@
                         </p>
                         <p class="d-flex">
                             <span>Discount</span>
-                            <span>$5.00</span>
+                            <span>$0.00</span>
                         </p>
                         <hr>
                         <p class="d-flex total-price">
                             <span>Total</span>
-                            <span>$14.79</span>
+                            <span>$@ViewData["Sum"]</span>
                         </p>
                     </div>
-                    <p><a href="checkout.html" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
+                    <p><a asp-action="Checkout" asp-controller="Home" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
                 </div>
             </div>
         </div>
@@ -358,57 +353,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Customer)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Product)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Customer.Password)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Product.ProductName)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>

@@ -7,17 +7,19 @@ namespace TheIndianSuperMarket.Models
     {
         public Customers()
         {
-            Cart = new HashSet<Cart>();
-            Purchases = new HashSet<Purchases>();
+            Payment = new HashSet<Payment>();
         }
 
         public int CustomerId { get; set; }
-        public string CustomerName { get; set; }
+        public string CustomerFirstName { get; set; }
+        public string CustomerLastName { get; set; }
+        public string Address { get; set; }
+        public string City { get; set; }
+        public string PostalCode { get; set; }
         public string CustomerPhone { get; set; }
         public string CustomerEmail { get; set; }
         public string Password { get; set; }
 
-        public virtual ICollection<Cart> Cart { get; set; }
-        public virtual ICollection<Purchases> Purchases { get; set; }
+        public virtual ICollection<Payment> Payment { get; set; }
     }
 }

@@ -18,10 +18,11 @@ namespace TheIndianSuperMarket.Models
         public virtual DbSet<Admin> Admin { get; set; }
         public virtual DbSet<AisleContains> AisleContains { get; set; }
         public virtual DbSet<Aisles> Aisles { get; set; }
-        public virtual DbSet<Cart> Cart { get; set; }
+        public virtual DbSet<Cart> cart { get; set; }
         public virtual DbSet<Customers> Customers { get; set; }
         public virtual DbSet<Departments> Departments { get; set; }
         public virtual DbSet<Employees> Employees { get; set; }
+        public virtual DbSet<Payment> Payment { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<ProvidedBy> ProvidedBy { get; set; }
         public virtual DbSet<ProvidesDelivery> ProvidesDelivery { get; set; }
@@ -101,41 +102,47 @@ namespace TheIndianSuperMarket.Models
                 entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
 
                 entity.Property(e => e.ProductId).HasColumnName("productId");
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.Cart)
-                    .HasForeignKey(d => d.CustomerId)
-                    .HasConstraintName("FK_cart_userRegistration");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.Cart)
-                    .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK_cart_product");
             });
 
             modelBuilder.Entity<Customers>(entity =>
             {
                 entity.HasKey(e => e.CustomerId)
-                    .HasName("PK__Customer__A4AE64B8B635F4A0");
+                    .HasName("PK__Customer__A4AE64B80E386F83");
 
                 entity.Property(e => e.CustomerId)
                     .HasColumnName("CustomerID")
                     .ValueGeneratedNever();
 
+                entity.Property(e => e.Address)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.City)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.CustomerEmail)
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
-                entity.Property(e => e.CustomerName)
+                entity.Property(e => e.CustomerFirstName)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CustomerLastName)
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
                 entity.Property(e => e.CustomerPhone)
-                    .HasMaxLength(255)
+                    .HasMaxLength(20)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Password)
                     .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PostalCode)
                     .HasMaxLength(255)
                     .IsUnicode(false);
             });
@@ -187,6 +194,50 @@ namespace TheIndianSuperMarket.Models
                     .WithMany(p => p.Employees)
                     .HasForeignKey(d => d.DepartmentName)
                     .HasConstraintName("FK__Employees__Depar__29572725");
+            });
+
+            modelBuilder.Entity<Payment>(entity =>
+            {
+                entity.Property(e => e.PaymentId)
+                    .HasColumnName("PaymentID")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.CardNumber)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CartId).HasColumnName("CartID");
+
+                entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
+
+                entity.Property(e => e.Cvv)
+                    .IsRequired()
+                    .HasColumnName("CVV")
+                    .HasMaxLength(3)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Expiration)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NameOnCard)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Cart)
+                    .WithMany(p => p.Payment)
+                    .HasForeignKey(d => d.CartId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Payment__CartID__0C85DE4D");
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.Payment)
+                    .HasForeignKey(d => d.CustomerId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Payment__Custome__0B91BA14");
             });
 
             modelBuilder.Entity<Products>(entity =>
@@ -302,11 +353,6 @@ namespace TheIndianSuperMarket.Models
                 entity.Property(e => e.PurchaseDate)
                     .HasMaxLength(255)
                     .IsUnicode(false);
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.Purchases)
-                    .HasForeignKey(d => d.CustomerId)
-                    .HasConstraintName("FK__Purchases__Custo__412EB0B6");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.Purchases)

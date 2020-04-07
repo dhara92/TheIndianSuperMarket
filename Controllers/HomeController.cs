@@ -43,11 +43,13 @@ namespace TheIndianSuperMarket.Controllers
            
                 return RedirectToAction("Index");
             }
-            var cartContext = _context.Cart.Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID")));
+            var cartContext = _context.cart.Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID")));
             HttpContext.Session.SetString("TotalItem", cartContext.Count().ToString());
             var CustomerContext = _context.Customers.Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID"))).FirstOrDefault();
             HttpContext.Session.SetString("CustomerEmail", CustomerContext.CustomerEmail);
+            HttpContext.Session.SetString("CustomerName", CustomerContext.CustomerFirstName +" " + CustomerContext.CustomerLastName);
             ViewData["CustomerEmail"] = CustomerContext.CustomerEmail;
+          
             return View();
         }
         public IActionResult Index()
@@ -63,23 +65,20 @@ namespace TheIndianSuperMarket.Controllers
         [HttpPost]
         public IActionResult Index([Bind("CustomerEmail,Password")] Customers customers)
         {
-            
-            var CustomerContext = _context.Customers.Where(p =>p.CustomerEmail ==customers.CustomerEmail && p.Password ==customers.Password).FirstOrDefault(); ;
+
+            var CustomerContext = _context.Customers.Where(p => p.CustomerEmail == customers.CustomerEmail && p.Password == customers.Password).FirstOrDefault();
             //Debug.Print("CustomerContext.CustomerId"+CustomerContext.CustomerId.ToString());
-           
+            var AdminContext = _context.Admin.Where(p => p.Name == customers.CustomerEmail && p.Password == customers.Password);
             if (CustomerContext != null ) 
             {
-                if (CustomerContext.CustomerEmail == customers.CustomerEmail && CustomerContext.Password == customers.Password)
-                {
-                    return RedirectToAction(nameof(HomePage), new { Cust_id = CustomerContext.CustomerId });
-                }
-                   
+                return RedirectToAction(nameof(HomePage), new { Cust_id = CustomerContext.CustomerId });
+
             }
-            else if(customers.CustomerEmail == "vivek@gmail.com" && customers.Password == "vivek")
+            else if(AdminContext != null)
             {
-                return RedirectToAction(nameof(Index),"Admins");
+                return RedirectToAction(nameof(Index), "Admins");
             }
-          
+         
             return View();
         }
         public IActionResult Contact()
@@ -137,6 +136,18 @@ namespace TheIndianSuperMarket.Controllers
         }
         public IActionResult Checkout()
         {
+            var productContext = _context.cart.Include(c => c.Customer).Include(c => c.Product).Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID")));
+            ViewData["Total"] = productContext.Sum(p => p.Product.PricePerCostUnit);
+            var customerContext = _context.Customers.Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID"))).FirstOrDefault();
+            ViewData["Fname"] = customerContext.CustomerFirstName;
+            ViewData["LName"] = customerContext.CustomerLastName;
+            ViewData["City"] = customerContext.City;
+            ViewData["Address"] = customerContext.Address;
+            ViewData["PostalCode"] = customerContext.PostalCode;
+            ViewData["Phone"] = customerContext.CustomerPhone;
+            ViewData["Email"] = customerContext.CustomerEmail;
+
+
             return View();
         }
         public IActionResult Privacy()
