@@ -28,8 +28,10 @@ namespace TheIndianSuperMarket.Models
         public string Cut { get; set; }
         public string Animal { get; set; }
         public string Description { get; set; }
+        public int? SupplierId { get; set; }
 
         public virtual Departments DepartmentNameNavigation { get; set; }
+        public virtual Suppliers Supplier { get; set; }
         public virtual ICollection<AisleContains> AisleContains { get; set; }
         public virtual ICollection<ProvidedBy> ProvidedBy { get; set; }
         public virtual ICollection<Purchases> Purchases { get; set; }

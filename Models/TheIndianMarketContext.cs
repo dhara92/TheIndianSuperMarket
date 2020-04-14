@@ -18,7 +18,8 @@ namespace TheIndianSuperMarket.Models
         public virtual DbSet<Admin> Admin { get; set; }
         public virtual DbSet<AisleContains> AisleContains { get; set; }
         public virtual DbSet<Aisles> Aisles { get; set; }
-        public virtual DbSet<Cart> cart { get; set; }
+        public virtual DbSet<Cart> Cart { get; set; }
+        public virtual DbSet<CustomerOrder> CustomerOrder { get; set; }
         public virtual DbSet<Customers> Customers { get; set; }
         public virtual DbSet<Departments> Departments { get; set; }
         public virtual DbSet<Employees> Employees { get; set; }
@@ -48,6 +49,15 @@ namespace TheIndianSuperMarket.Models
                 entity.Property(e => e.AdminId)
                     .HasColumnName("AdminID")
                     .ValueGeneratedNever();
+
+                entity.Property(e => e.Contact)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Email)
+                    .HasColumnName("email")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -102,6 +112,28 @@ namespace TheIndianSuperMarket.Models
                 entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
 
                 entity.Property(e => e.ProductId).HasColumnName("productId");
+            });
+
+            modelBuilder.Entity<CustomerOrder>(entity =>
+            {
+                entity.HasKey(e => e.OrderId)
+                    .HasName("PK__Customer__C3905BCF73A07CF6");
+
+                entity.Property(e => e.OrderId).ValueGeneratedNever();
+
+                entity.Property(e => e.Date)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Total)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Customers>(entity =>
@@ -297,6 +329,11 @@ namespace TheIndianSuperMarket.Models
                     .HasForeignKey(d => d.DepartmentName)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Products__Depart__2C3393D0");
+
+                entity.HasOne(d => d.Supplier)
+                    .WithMany(p => p.Products)
+                    .HasForeignKey(d => d.SupplierId)
+                    .HasConstraintName("FK__Products__Suppli__3A4CA8FD");
             });
 
             modelBuilder.Entity<ProvidedBy>(entity =>
@@ -391,6 +428,14 @@ namespace TheIndianSuperMarket.Models
                 entity.Property(e => e.SupplierId)
                     .HasColumnName("SupplierID")
                     .ValueGeneratedNever();
+
+                entity.Property(e => e.Contact)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Email)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.SupplierAddress)
                     .HasMaxLength(255)

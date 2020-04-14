@@ -14,6 +14,6 @@ namespace TheIndianSuperMarket.Models
 
         public virtual Customers Customer { get; set; }
         public virtual Products Product { get; set; }
-        
+
     }
 }

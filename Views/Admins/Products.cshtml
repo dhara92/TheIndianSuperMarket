@@ -1,4 +1,6 @@
-﻿
+﻿@model IEnumerable<Products>
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Microsoft.AspNetCore.Http;
 @{
     ViewData["Title"] = "Products";
 }
@@ -9,7 +11,7 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
 <!--[if gt IE 8]><!-->
 <html class="no-js" lang="">
- <!--<![endif]-->
+<!--<![endif]-->
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -17,8 +19,8 @@
     <meta name="description" content="The Indian SuperMarket">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="apple-touch-icon" type="image/png" href="images/favicon.png">
-    <link rel="shortcut icon" type="image/png" href="images/favicon.png">
+    <link rel="apple-touch-icon" type="image/png" href="~/images//favicon.png">
+    <link rel="shortcut icon" type="image/png" href="~/images//favicon.png">
 
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.0/normalize.min.css">
@@ -27,14 +29,18 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.0/css/flag-icon.min.css">
-    <link rel="stylesheet" href="assets/css/cs-skin-elastic.css">
-    <link rel="stylesheet" href="assets/css/lib/datatable/dataTables.bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="~/assets//css/cs-skin-elastic.css">
+    <link rel="stylesheet" href="~/assets//css/lib/datatable/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets//css/style.css">
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
-
+    <style>
+        ul {
+            list-style-type: none;
+        }
+    </style>
 </head>
 <body>
     <!-- Left Panel -->
@@ -43,38 +49,38 @@
             <div id="main-menu" class="main-menu collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class="active">
-                        <a asp-action="Index"><i class="menu-icon fa fa-laptop"></i>Dashboard </a>
+                        <a asp-controller="Admins" asp-action="Index"><i class="menu-icon fa fa-laptop"></i>Dashboard </a>
                     </li>
-                    <li class="menu-item-has-children dropdown">
+                    <li class="menu-item-has-children dropdown show">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-tags"></i>Catalog</a>
-                        <ul class="sub-menu children dropdown-menu">
-                            <li><i class="fa fa-book"></i><a asp-action="ProductCategories">Product Categories</a></li>
-                            <li><i class="fa fa-briefcase"></i><a asp-action="Products">Products</a></li>
+                        <ul class="sub-menu children ">
+                            <li><i class="fa fa-book"></i><a asp-controller="Admins" asp-action="ProductCategories">Product Categories</a></li>
+                            <li><i class="fa fa-briefcase"></i><a asp-controller="Admins" asp-action="Products">Products</a></li>
                         </ul>
                     </li>
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-shopping-cart"></i>Orders</a>
-                        <ul class="sub-menu children dropdown-menu">
-                            <li><i class="fa fa-shopping-cart"></i><a asp-action="CustomerOrders">Customer Orders</a></li>
-                            <li><i class="ti ti-shopping-cart-full"></i><a asp-action="StoreOrders">Store Orders</a></li>
+                    <li class="menu-item-has-children dropdown show">
+                        <a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-shopping-cart"></i>Orders</a>
+                        <ul class="sub-menu children ">
+                            <li><i class="fa fa-shopping-cart"></i><a asp-controller="Admins" asp-action="CustomerOrders">Customer Orders</a></li>
+                            <li><i class="ti ti-shopping-cart-full"></i><a asp-controller="Admins" asp-action="StoreOrders">Store Orders</a></li>
                         </ul>
                     </li>
-                    <li class="menu-item-has-children dropdown">
+                    <li class="menu-item-has-children dropdown show">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-group"></i>Stackholders</a>
-                        <ul class="sub-menu children dropdown-menu">
-                            <li><i class="menu-icon ti ti-id-badge"></i><a asp-action="Administrator">Administrator</a></li>
-                            <li><i class="menu-icon fa fa-user"></i><a asp-action="Supplier">Suppliers</a></li>
-                            <li><i class="menu-icon fa fa-user"></i><a asp-action="Customers">Customers</a></li>
+                        <ul class="sub-menu children">
+                            <li><i class="menu-icon ti ti-id-badge"></i><a asp-controller="Admins" asp-action="Administrator">Administrator</a></li>
+                            <li><i class="menu-icon fa fa-user"></i><a asp-controller="Admins" asp-action="Supplier">Suppliers</a></li>
+                            <li><i class="menu-icon fa fa-user"></i><a asp-controller="Admins" asp-action="Customers">Customers</a></li>
                         </ul>
                     </li>
 
                     <li class="menu-title">Extras</li><!-- /.menu-title -->
-                    <li class="menu-item-has-children dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-glass"></i>Pages</a>
-                        <ul class="sub-menu children dropdown-menu">
-                            <li><i class="menu-icon fa fa-sign-in"></i><a href="page-login.html">Login</a></li>
-                            <li><i class="menu-icon fa fa-sign-in"></i><a href="page-register.html">Register</a></li>
-                            <li><i class="menu-icon fa fa-paper-plane"></i><a href="pages-forget.html">Forget Pass</a></li>
+                    <li class="menu-item-has-children dropdown show">
+                        <a href="#"> <i class="menu-icon fa fa-glass"></i>Pages</a>
+                        <ul class="sub-menu children ">
+                            <li><i class="menu-icon fa fa-sign-in"></i><a href="#">Login</a></li>
+                            <li><i class="menu-icon fa fa-sign-in"></i><a href="#">Register</a></li>
+                            <li><i class="menu-icon fa fa-paper-plane"></i><a href="#">Forget Pass</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -88,7 +94,7 @@
         <header id="header" class="header">
             <div class="top-left">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="./">The Indian SuperMarket</a>
+                    <a class="navbar-brand" asp-action="HomePage" asp-controller="Home" asp-route-Cust_ID="@HttpContextAccessor.HttpContext.Session.GetString("CustomerID")">The Indian SuperMarket</a>
                     <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
                 </div>
             </div>
@@ -126,7 +132,7 @@
 
                     <div class="user-area dropdown float-right">
                         <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="user-avatar rounded-circle" src="images/admin.jpg" alt="User Avatar">
+                            <img class="user-avatar rounded-circle" src="~/images//admin.jpg" alt="User Avatar">
                         </a>
 
                         <div class="user-menu dropdown-menu">
@@ -146,13 +152,17 @@
         <div class="content">
             <div class="animated fadeIn">
                 <div class="row">
-
+                   
                     <div class="col-md-12">
+                      
                         <div class="card">
+                            <div class="text-success text-lg-center">
+                                @TempData["Message"]
+                            </div>
                             <div class="card-header">
                                 <strong class="card-title">Product List</strong>
                                 <div class="float-right">
-                                    <button type="button" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></button>
+                                    <a asp-controller="Products" asp-action="Create" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></a>
                                 </div>
 
                             </div>
@@ -168,136 +178,20 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Milk 2%</td>
-                                            <td>Dairy Products</td>
-                                            <td>CA$ 4.20</td>
-                                            <td>15</td>
-                                            <td>
-                                                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button>
-                                                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Milk 1%</td>
-                                            <td>Dairy Products</td>
-                                            <td>CA$ 3.79</td>
-                                            <td>10</td>
-                                            <td>
-                                                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button>
-                                                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Paneer 200g</td>
-                                            <td>Dairy Products</td>
-                                            <td>CA$ 4.59</td>
-                                            <td>20</td>
-                                            <td>
-                                                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button>
-                                                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Milk 3.25%</td>
-                                            <td>Dairy Products</td>
-                                            <td>CA$ 5.69</td>
-                                            <td>18</td>
-                                            <td>
-                                                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button>
-                                                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Paneer 1kg</td>
-                                            <td>Dairy Products</td>
-                                            <td>CA$ 19.99</td>
-                                            <td>10</td>
-                                            <td>
-                                                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button>
-                                                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Dahi 275g</td>
-                                            <td>Dairy Products</td>
-                                            <td>CA$ 1.69</td>
-                                            <td>29</td>
-                                            <td>
-                                                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button>
-                                                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Dahi 1kg</td>
-                                            <td>Dairy Products</td>
-                                            <td>CA$ 8.79</td>
-                                            <td>0</td>
-                                            <td>
-                                                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button>
-                                                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Mirch Masala Paratha Family Pack</td>
-                                            <td>Frozen Instant Food</td>
-                                            <td>CA$ 7.69</td>
-                                            <td>32</td>
-                                            <td>
-                                                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button>
-                                                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Deep Paneer Paratha</td>
-                                            <td>Frozen Instant Food</td>
-                                            <td>CA$ 2.49</td>
-                                            <td>2</td>
-                                            <td>
-                                                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button>
-                                                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Deep Tawa Paneer Wrap</td>
-                                            <td>Frozen Instant Food</td>
-                                            <td>CA$ 2.49</td>
-                                            <td>10</td>
-                                            <td>
-                                                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button>
-                                                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Garvi Gujarat Khari</td>
-                                            <td>Indian Snacks</td>
-                                            <td>CA$ 3.29</td>
-                                            <td>30</td>
-                                            <td>
-                                                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button>
-                                                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Handmade Khakhra</td>
-                                            <td>Indian Snacks</td>
-                                            <td>CA$ 3.29</td>
-                                            <td>3</td>
-                                            <td>
-                                                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button>
-                                                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Deep Handmade Fafda</td>
-                                            <td>Indian Snacks</td>
-                                            <td>CA$ 4.99</td>
-                                            <td>4</td>
-                                            <td>
-                                                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></button>
-                                                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                            </td>
-                                        </tr>
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr>
+                                                <td>@item.ProductName</td>
+                                                <td>@item.DepartmentName</td>
+                                                <td>@item.PricePerCostUnit</td>
+                                                <td>@item.QuantityInStock</td>
+                                                <td>
+                                                    <a asp-controller="Products" asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-warning btn-sm"><i class="fa fa-edit"></i></a>
+                                                    <a asp-action="Delete" asp-route-id="@item.ProductId" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></a>
+
+                                                </td>
+                                            </tr>
+                                        }
                                     </tbody>
                                 </table>
                             </div>
@@ -330,23 +224,23 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="~/assets//js/main.js"></script>
 
 
-    <script src="assets/js/lib/data-table/datatables.min.js"></script>
-    <script src="assets/js/lib/data-table/dataTables.bootstrap.min.js"></script>
-    <script src="assets/js/lib/data-table/dataTables.buttons.min.js"></script>
-    <script src="assets/js/lib/data-table/buttons.bootstrap.min.js"></script>
-    <script src="assets/js/lib/data-table/jszip.min.js"></script>
-    <script src="assets/js/lib/data-table/vfs_fonts.js"></script>
-    <script src="assets/js/lib/data-table/buttons.html5.min.js"></script>
-    <script src="assets/js/lib/data-table/buttons.print.min.js"></script>
-    <script src="assets/js/lib/data-table/buttons.colVis.min.js"></script>
-    <script src="assets/js/init/datatables-init.js"></script>
+    <script src="~/assets//js/lib/data-table/datatables.min.js"></script>
+    <script src="~/assets//js/lib/data-table/dataTables.bootstrap.min.js"></script>
+    <script src="~/assets//js/lib/data-table/dataTables.buttons.min.js"></script>
+    <script src="~/assets//js/lib/data-table/buttons.bootstrap.min.js"></script>
+    <script src="~/assets//js/lib/data-table/jszip.min.js"></script>
+    <script src="~/assets//js/lib/data-table/vfs_fonts.js"></script>
+    <script src="~/assets//js/lib/data-table/buttons.html5.min.js"></script>
+    <script src="~/assets//js/lib/data-table/buttons.print.min.js"></script>
+    <script src="~/assets//js/lib/data-table/buttons.colVis.min.js"></script>
+    <script src="~/assets//js/init/datatables-init.js"></script>
 
 
     <script type="text/javascript">
-    $(document).ready(function () {
+        $(document).ready(function () {
             $('#bootstrap-data-table-export').DataTable();
         });</script>
 

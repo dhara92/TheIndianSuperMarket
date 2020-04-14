@@ -22,7 +22,7 @@ namespace TheIndianSuperMarket.Controllers
         // GET: Carts
         public async Task<IActionResult> Index()
         {
-            var Context = _context.cart.Include(c => c.Customer).Include(c => c.Product).Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID")));
+            var Context = _context.Cart.Include(c => c.Customer).Include(c => c.Product).Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID")));
             HttpContext.Session.SetString("TotalItem", Context.Count().ToString());
             ViewData["Sum"] = Context.Sum(p => p.Product.PricePerCostUnit);
             return View(await Context.ToListAsync());
@@ -36,7 +36,7 @@ namespace TheIndianSuperMarket.Controllers
                 return NotFound();
             }
 
-            var cart = await _context.cart
+            var cart = await _context.Cart
                 .Include(c => c.Customer)
                 .Include(c => c.Product)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -78,7 +78,7 @@ namespace TheIndianSuperMarket.Controllers
                 return NotFound();
             }
 
-            var cart = await _context.cart.FindAsync(id);
+            var cart = await _context.Cart.FindAsync(id);
             if (cart == null)
             {
                 return NotFound();
@@ -127,7 +127,7 @@ namespace TheIndianSuperMarket.Controllers
         }
 
         // GET: Carts/Delete/5
-     /* public async Task<IActionResult> Delete(int? id)
+     /*  public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -155,7 +155,7 @@ namespace TheIndianSuperMarket.Controllers
                 return NotFound();
             }
 
-            var cart = await _context.cart
+            var cart = await _context.Cart
                 .Include(c => c.Customer)
                 .Include(c => c.Product)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -164,18 +164,18 @@ namespace TheIndianSuperMarket.Controllers
                 return NotFound();
             }
 
-            var _cart = await _context.cart.FindAsync(id);
-            _context.cart.Remove(_cart);
+            var _cart = await _context.Cart.FindAsync(id);
+            _context.Cart.Remove(_cart);
             await _context.SaveChangesAsync();
 
-            var cartContext = _context.cart.Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID")));
+            var cartContext = _context.Cart.Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID")));
             HttpContext.Session.SetString("TotalItem", cartContext.Count().ToString());
             return RedirectToAction(nameof(Index));
         }
 
         private bool CartExists(int id)
         {
-            return _context.cart.Any(e => e.Id == id);
+            return _context.Cart.Any(e => e.Id == id);
         }
     }
 }

@@ -43,7 +43,7 @@ namespace TheIndianSuperMarket.Controllers
            
                 return RedirectToAction("Index");
             }
-            var cartContext = _context.cart.Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID")));
+            var cartContext = _context.Cart.Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID")));
             HttpContext.Session.SetString("TotalItem", cartContext.Count().ToString());
             var CustomerContext = _context.Customers.Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID"))).FirstOrDefault();
             HttpContext.Session.SetString("CustomerEmail", CustomerContext.CustomerEmail);
@@ -68,7 +68,7 @@ namespace TheIndianSuperMarket.Controllers
 
             var CustomerContext = _context.Customers.Where(p => p.CustomerEmail == customers.CustomerEmail && p.Password == customers.Password).FirstOrDefault();
             //Debug.Print("CustomerContext.CustomerId"+CustomerContext.CustomerId.ToString());
-            var AdminContext = _context.Admin.Where(p => p.Name == customers.CustomerEmail && p.Password == customers.Password);
+            var AdminContext = _context.Admin.Where(p => p.Email == customers.CustomerEmail && p.Password == customers.Password).FirstOrDefault();
             if (CustomerContext != null ) 
             {
                 return RedirectToAction(nameof(HomePage), new { Cust_id = CustomerContext.CustomerId });
@@ -136,7 +136,7 @@ namespace TheIndianSuperMarket.Controllers
         }
         public IActionResult Checkout()
         {
-            var productContext = _context.cart.Include(c => c.Customer).Include(c => c.Product).Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID")));
+            var productContext = _context.Cart.Include(c => c.Customer).Include(c => c.Product).Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID")));
             ViewData["Total"] = productContext.Sum(p => p.Product.PricePerCostUnit);
             var customerContext = _context.Customers.Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID"))).FirstOrDefault();
             ViewData["Fname"] = customerContext.CustomerFirstName;

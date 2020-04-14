@@ -49,7 +49,7 @@ namespace TheIndianSuperMarket.Controllers
         // GET: Payments/Create
         public IActionResult Create()
         {
-            ViewData["CartId"] = new SelectList(_context.cart, "Id", "Id");
+            ViewData["CartId"] = new SelectList(_context.Cart, "Id", "Id");
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "Password");
             return View();
         }
@@ -61,7 +61,7 @@ namespace TheIndianSuperMarket.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PaymentId,CartId,CustomerId,NameOnCard,CardNumber,Expiration,Cvv")] Payment payment)
         {
-            var cartContext = _context.cart.Include(p => p.Customer).Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID"))).FirstOrDefault(); ;
+            var cartContext = _context.Cart.Include(p => p.Customer).Where(p => p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID"))).FirstOrDefault(); ;
             payment.CustomerId =Convert.ToInt32(HttpContext.Session.GetString("CustomerID"));
             payment.CartId = cartContext.Id ;
             var paymentContext = _context.Payment;
@@ -78,11 +78,17 @@ namespace TheIndianSuperMarket.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(payment);
-                await _context.SaveChangesAsync();
+               
                 HttpContext.Session.SetString("TotalItem","0");
+
+                var _cart = _context.Cart.Where(p=>p.CustomerId == Convert.ToInt32(HttpContext.Session.GetString("CustomerID"))).FirstOrDefault();
+              
+                _context.Cart.Remove(_cart);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
+
             }
-            ViewData["CartId"] = new SelectList(_context.cart, "Id", "Id", payment.CartId);
+            ViewData["CartId"] = new SelectList(_context.Cart, "Id", "Id", payment.CartId);
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "Password", payment.CustomerId);
             return View(payment);
         }
@@ -100,7 +106,7 @@ namespace TheIndianSuperMarket.Controllers
             {
                 return NotFound();
             }
-            ViewData["CartId"] = new SelectList(_context.cart, "Id", "Id", payment.CartId);
+            ViewData["CartId"] = new SelectList(_context.Cart, "Id", "Id", payment.CartId);
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "Password", payment.CustomerId);
             return View(payment);
         }
@@ -137,7 +143,7 @@ namespace TheIndianSuperMarket.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CartId"] = new SelectList(_context.cart, "Id", "Id", payment.CartId);
+            ViewData["CartId"] = new SelectList(_context.Cart, "Id", "Id", payment.CartId);
             ViewData["CustomerId"] = new SelectList(_context.Customers, "CustomerId", "Password", payment.CustomerId);
             return View(payment);
         }

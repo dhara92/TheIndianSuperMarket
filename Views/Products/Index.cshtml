@@ -50,10 +50,8 @@
                             <span class="text">+ 1235 2355 98</span>
                         </div>
                         <div class="col-md pr-4 d-flex topper align-items-center">
-                            <div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
-                            <span class="text">
-                                @HttpContextAccessor.HttpContext.Session.GetString("CustomerEmail")
-                            </span>
+                            <div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-account_box"></span></div>
+                            <span class="text">@HttpContextAccessor.HttpContext.Session.GetString("CustomerName")</span>
                         </div>
                         <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
                             <span class="text">1-2 Business days delivery</span>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -25,19 +27,24 @@ namespace TheIndianSuperMarket.Controllers
         }
         public IActionResult Administrator()
         {
-            return View();
+            var AdminContext = _context.Admin.OrderBy(p=>p.Name);
+            return View(AdminContext);
         }
         public IActionResult Customers()
         {
-            return View();
+            var CustomerContext = _context.Customers.OrderBy(p => p.CustomerFirstName);
+            return View(CustomerContext);
         }
         public IActionResult Products()
         {
-            return View();
+            var ProductContext = _context.Products.OrderBy(p => p.DepartmentName);
+            return View(ProductContext);
         }
         public IActionResult CustomerOrders()
         {
-            return View();
+            var OrderContext = _context.CustomerOrder;
+       
+            return View(OrderContext);
         }
         public IActionResult StoreOrders()
         {
@@ -45,19 +52,49 @@ namespace TheIndianSuperMarket.Controllers
         }
         public IActionResult Supplier()
         {
-            return View();
+            var SupplierContext = _context.Suppliers.OrderBy(p => p.SupplierName);
+            return View(SupplierContext);
         }
-        public IActionResult SupplierProduct()
+        public IActionResult SupplierProduct(int id)
         {
-            return View();
+            var supplierContext = _context.Suppliers.Where(p => p.SupplierId == id).FirstOrDefault();
+            var productContext = _context.Products.Where(p=>p.SupplierId == id);
+            ViewData["SupplierName"] = supplierContext.SupplierName;
+            return View(productContext);
         }
         public IActionResult ProductCategories()
         {
-            return View();
+            var DepartmentContext = _context.Departments.OrderBy(p => p.DepartmentName);
+            return View(DepartmentContext);
         }
-        // GET: Admins/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Confirm()
         {
+            MailMessage mail = new MailMessage();
+            mail.To.Add("dharanarola2012@gmail.com");
+            mail.From = new MailAddress("abc@gmail.com");
+            mail.Subject = "Regarding To Order";
+            string Body = "You Got Message From Vivek Shah " + "This is the Message: Please Kindly Check order detail for next order!";
+            mail.Body = Body;
+
+            using (var smtp = new SmtpClient())
+            {
+                var credential = new NetworkCredential
+                {
+                    UserName = "dharanarola2012@gmail.com",  // replace with valid value
+                    Password = "K@09neeSUR"  // replace with valid value
+                };
+                smtp.Credentials = credential;
+                smtp.Host = "smtp.gmail.com";
+                smtp.Port = 587;
+                smtp.EnableSsl = true;
+                smtp.Send(mail);
+                TempData["Message"] = "Order Placed Succesfully!";
+                return RedirectToAction("Supplier");
+            }
+        }
+            // GET: Admins/Details/5
+       public async Task<IActionResult> Details(int? id)
+       {
             if (id == null)
             {
                 return NotFound();
@@ -146,7 +183,7 @@ namespace TheIndianSuperMarket.Controllers
             return View(admin);
         }
 
-        // GET: Admins/Delete/5
+        /* GET: Admins/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -162,17 +199,18 @@ namespace TheIndianSuperMarket.Controllers
             }
 
             return View(admin);
-        }
+        }*/
 
-        // POST: Admins/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        // POST: /Delete/5
+        
+        public async Task<IActionResult> Delete(int id)
         {
-            var admin = await _context.Admin.FindAsync(id);
-            _context.Admin.Remove(admin);
+
+            var products = await _context.Products.FindAsync(id);
+            _context.Products.Remove(products);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            TempData["Message"] = products.ProductName + " has been deleted Successfully!";
+            return RedirectToAction(nameof(Products));
         }
 
         private bool AdminExists(int id)

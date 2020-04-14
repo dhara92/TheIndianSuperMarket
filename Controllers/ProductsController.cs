@@ -67,11 +67,15 @@ namespace TheIndianSuperMarket.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProductId,ProductName,PricePerCostUnit,CostUnit,DepartmentName,QuantityInStock,Brand,ProductionDate,BestBeforeDate,Plu,Upc,Organic,Cut,Animal")] Products products)
         {
+            var prodContext = _context.Products;
+            int id = prodContext.Max(p => p.ProductId);
+            products.ProductId = id + 1;
             if (ModelState.IsValid)
             {
                 _context.Add(products);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                TempData["Message"] = products.ProductName + " has been created succesfully!";
+                return RedirectToAction("Products","Admins");
             }
             ViewData["DepartmentName"] = new SelectList(_context.Departments, "DepartmentName", "DepartmentName", products.DepartmentName);
             return View(products);
@@ -124,7 +128,9 @@ namespace TheIndianSuperMarket.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+
+                TempData["Message"] = products.ProductName + " has been edited succesfully!";
+                return RedirectToAction("Products", "Admins");
             }
             ViewData["DepartmentName"] = new SelectList(_context.Departments, "DepartmentName", "DepartmentName", products.DepartmentName);
             return View(products);

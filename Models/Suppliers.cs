@@ -7,6 +7,7 @@ namespace TheIndianSuperMarket.Models
     {
         public Suppliers()
         {
+            Products = new HashSet<Products>();
             ProvidedBy = new HashSet<ProvidedBy>();
             ProvidesDelivery = new HashSet<ProvidesDelivery>();
         }
@@ -15,7 +16,10 @@ namespace TheIndianSuperMarket.Models
         public string SupplierName { get; set; }
         public string SupplierAddress { get; set; }
         public string SupplierPhone { get; set; }
+        public string Contact { get; set; }
+        public string Email { get; set; }
 
+        public virtual ICollection<Products> Products { get; set; }
         public virtual ICollection<ProvidedBy> ProvidedBy { get; set; }
         public virtual ICollection<ProvidesDelivery> ProvidesDelivery { get; set; }
     }
